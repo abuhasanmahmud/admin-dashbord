@@ -17,7 +17,7 @@ const AddProductSidebar = ({ open, setOpen }) => {
   const [submitting, setIsSubmitting] = useState(false);
 
   const AddProductHandeler = async (data) => {
-    console.log("data in product", data);
+    console.log("data in products", data);
     try {
       const response = await fetch("/api/product/add", {
         method: "POST",
