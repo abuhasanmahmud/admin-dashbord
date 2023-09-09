@@ -2,9 +2,11 @@
 import { allProducts } from "@/utils/products";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import AddProductSidebar from "./AddProductSidebar";
+import { useState } from "react";
 
 const Products = () => {
   //   console.log("products", allProducts);
+  const [open, setOpen] = useState(false);
   return (
     <div>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -14,6 +16,7 @@ const Products = () => {
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
             <button
+              onClick={() => setOpen(true)}
               type="button"
               className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
@@ -94,7 +97,7 @@ const Products = () => {
           </div>
         </div>
       </div>
-      <AddProductSidebar />
+      <AddProductSidebar open={open} setOpen={setOpen} />
     </div>
   );
 };
