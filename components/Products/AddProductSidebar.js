@@ -32,7 +32,6 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
 
       if (response.ok) {
         toast.success("Product Add Successfully");
-        reset();
         setOpen(false);
         setProductAdd(true);
       }

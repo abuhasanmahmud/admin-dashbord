@@ -24,7 +24,8 @@ const Products = () => {
 
   useEffect(() => {
     featchProduct();
-  }, [productAdd, deleteSuccessFully]);
+  }, [productAdd, deleteSuccessFully, products]);
+  console.log("porducts", products);
 
   const updateProduct = async (product) => {
     setProductDetails(product);
