@@ -21,7 +21,6 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
 
   const AddProductHandeler = async (data) => {
     setIsSubmitting(true);
-    // console.log("data in products", data);
 
     try {
       const response = await fetch("/api/product/add", {
@@ -34,6 +33,31 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
       if (response.ok) {
         toast.success("Product Add Successfully");
         reset();
+        setOpen(false);
+        setProductAdd(true);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const updateProductHandelar = async (data) => {
+    setIsSubmitting(true);
+    // console.log("data in products", data);
+
+    try {
+      const response = await fetch(`/api/product/${productDetails._id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          product: data,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Product Update Successfully");
+        // reset();
         setOpen(false);
         setProductAdd(true);
       }
@@ -63,7 +87,11 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-2xl">
                   <form
-                    onSubmit={handleSubmit(AddProductHandeler)}
+                    onSubmit={
+                      productDetails?._id
+                        ? handleSubmit(updateProductHandelar)
+                        : handleSubmit(AddProductHandeler)
+                    }
                     className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl"
                   >
                     <div className="flex-1">
@@ -110,9 +138,7 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
                           <div className="sm:col-span-2">
                             <input
                               type="text"
-                              name="product-name"
-                              id="project-name"
-                              // value={productDetails?.name}
+                              defaultValue={productDetails ? productDetails?.name : ""}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                               {...register("name", { required: true })}
                             />
@@ -136,8 +162,7 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
                           <div className="sm:col-span-2">
                             <input
                               type="text"
-                              name="project-name"
-                              id="project-name"
+                              defaultValue={productDetails?.category}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               {...register("category", { required: true })}
                             />
@@ -159,9 +184,8 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
                           </div>
                           <div className="sm:col-span-2">
                             <input
-                              type="text"
-                              name="project-name"
-                              id="project-name"
+                              type="number"
+                              defaultValue={productDetails?.price}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               {...register("price", { required: true })}
                             />
@@ -183,11 +207,9 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
                           </div>
                           <div className="sm:col-span-2">
                             <textarea
-                              id="project-description"
-                              name="project-description"
+                              defaultValue={productDetails?.des}
                               rows={3}
                               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                              defaultValue={""}
                               {...register("des", { required: true })}
                             />
                             {errors.des?.type === "required" && (
@@ -243,7 +265,7 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
                           type="submit"
                           className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >
-                          Create
+                          {productDetails?._id ? <span>Update</span> : <span>Create</span>}
                         </button>
                       </div>
                     </div>
