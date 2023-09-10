@@ -1,3 +1,5 @@
+"use client";
+
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import AddProductSidebar from "./AddProductSidebar";
 import { useEffect, useState } from "react";
