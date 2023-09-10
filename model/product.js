@@ -7,8 +7,12 @@ const productSchema = new Schema({
   img: {
     type: String,
   },
-  description: {
+  des: {
     type: String,
+  },
+  status: {
+    type: String,
+    default: "Publish",
   },
   price: {
     type: String,

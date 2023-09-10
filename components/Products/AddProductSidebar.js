@@ -5,19 +5,24 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { LinkIcon, PlusIcon, QuestionMarkCircleIcon } from "@heroicons/react/20/solid";
 import { PhotoIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { useForm } from "react-hook-form";
-
-const AddProductSidebar = ({ open, setOpen }) => {
+import { toast } from "react-toastify";
+import { Bars } from "react-loader-spinner";
+const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => {
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
   const [submitting, setIsSubmitting] = useState(false);
+  console.log("productDetails in add", productDetails);
 
   const AddProductHandeler = async (data) => {
-    console.log("data in products", data);
+    setIsSubmitting(true);
+    // console.log("data in products", data);
+
     try {
       const response = await fetch("/api/product/add", {
         method: "POST",
@@ -27,7 +32,10 @@ const AddProductSidebar = ({ open, setOpen }) => {
       });
 
       if (response.ok) {
-        console.log("responsie is okk");
+        toast.success("Product Add Successfully");
+        reset();
+        setOpen(false);
+        setProductAdd(true);
       }
     } catch (error) {
       console.log(error);
@@ -64,7 +72,13 @@ const AddProductSidebar = ({ open, setOpen }) => {
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                              Add Product
+                              {productDetails?._id ? (
+                                <>
+                                  Update product <span className="mx-3"> {productDetails?.name} </span>
+                                </>
+                              ) : (
+                                <>Add Product</>
+                              )}
                             </Dialog.Title>
                           </div>
                           <div className="flex h-7 items-center">
@@ -98,7 +112,8 @@ const AddProductSidebar = ({ open, setOpen }) => {
                               type="text"
                               name="product-name"
                               id="project-name"
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              // value={productDetails?.name}
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-2"
                               {...register("name", { required: true })}
                             />
                             {errors.name?.type === "required" && (
@@ -123,7 +138,7 @@ const AddProductSidebar = ({ open, setOpen }) => {
                               type="text"
                               name="project-name"
                               id="project-name"
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               {...register("category", { required: true })}
                             />
                             {errors.category?.type === "required" && (
@@ -147,7 +162,7 @@ const AddProductSidebar = ({ open, setOpen }) => {
                               type="text"
                               name="project-name"
                               id="project-name"
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               {...register("price", { required: true })}
                             />
                             {errors.price?.type === "required" && (
@@ -171,7 +186,7 @@ const AddProductSidebar = ({ open, setOpen }) => {
                               id="project-description"
                               name="project-description"
                               rows={3}
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 px-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               defaultValue={""}
                               {...register("des", { required: true })}
                             />
@@ -185,36 +200,36 @@ const AddProductSidebar = ({ open, setOpen }) => {
 
                         {/* product img */}
                         <div>
-                          <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                            <div className="text-center">
-                              <PhotoIcon
-                                className="mx-auto h-12 w-12 text-gray-300"
-                                aria-hidden="true"
-                              />
-                              <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                <label
-                                  htmlFor="file-upload"
-                                  className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                                >
-                                  <span>Upload product image</span>
-                                  <input
-                                    id="file-upload"
-                                    name="file-upload"
-                                    type="file"
-                                    className="sr-only"
-                                  />
-                                </label>
-                                <p className="pl-1">or drag and drop</p>
-                              </div>
-                              <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                            </div>
-                          </div>
+                          <label
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            for="product-img"
+                          >
+                            Upload product image
+                          </label>
+                          <input
+                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            id="product-img"
+                            type="file"
+                          />
                         </div>
                       </div>
                     </div>
 
                     {/* Action buttons */}
                     <div className="flex-shrink-0 border-t border-gray-200 px-4 py-5 sm:px-6">
+                      {submitting && (
+                        <>
+                          <Bars
+                            height="80"
+                            width="80"
+                            color="#4fa94d"
+                            ariaLabel="bars-loading"
+                            wrapperStyle={{}}
+                            wrapperClass=""
+                            visible={true}
+                          />
+                        </>
+                      )}
                       <div className="flex justify-end space-x-3">
                         <button
                           type="button"
@@ -224,6 +239,7 @@ const AddProductSidebar = ({ open, setOpen }) => {
                           Cancel
                         </button>
                         <button
+                          disabled={submitting}
                           type="submit"
                           className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                         >

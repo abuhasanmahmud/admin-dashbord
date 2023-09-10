@@ -1,14 +1,48 @@
 "use client";
-import { allProducts } from "@/utils/products";
+
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import AddProductSidebar from "./AddProductSidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ProductDelete from "../modal/ProductDelete";
 
 const Products = () => {
   //   console.log("products", allProducts);
   const [open, setOpen] = useState(false);
+  const [products, setProduct] = useState([]);
+  const [productAdd, setProductAdd] = useState(false);
+  const [deletModalOpen, setDeletModalOpen] = useState(false);
+  const [productId, setProductId] = useState("");
+  const [deleteSuccessFully, setDeleteProductSuccessfully] = useState(false);
+  const [productDetails, setProductDetails] = useState({});
+  // console.log("productAdd", productAdd);
+  const featchProduct = async () => {
+    const res = await fetch("/api/product/products");
+    const data = await res.json();
+    // console.log("res in products ", data);
+    setProduct(data);
+    setProductAdd(false);
+    setDeleteProductSuccessfully(false);
+  };
+
+  useEffect(() => {
+    featchProduct();
+  }, [productAdd, deleteSuccessFully]);
+
+  const updateProduct = async (product) => {
+    setProductDetails(product);
+    setOpen(true);
+  };
+
+  // console.log("productDetails", productDetails);
+
   return (
     <div>
+      <ProductDelete
+        deletModalOpen={deletModalOpen}
+        setDeletModalOpen={setDeletModalOpen}
+        productId={productId}
+        setDeleteProductSuccessfully={setDeleteProductSuccessfully}
+      />
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
@@ -69,7 +103,7 @@ const Products = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {allProducts.slice(0, 10).map((item) => (
+                  {products?.map((item) => (
                     <tr key={item._id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                         <img src={item.img} style={{ width: "30px", height: "20" }} alt="Product img" />
@@ -81,12 +115,20 @@ const Products = () => {
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{item.price}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Publish</td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right flex justify-center  items-center gap-2 text-sm font-medium sm:pr-0">
-                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          Edit<span className="sr-only">, {item.name}</span>
+                        <a
+                          onClick={() => updateProduct(item)}
+                          className="text-indigo-600 hover:text-indigo-900 cursor-pointer "
+                        >
+                          Edit<span className="sr-only"> {item.name}</span>
                         </a>
 
-                        <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                          <RiDeleteBin5Fill />
+                        <a
+                          onClick={() => {
+                            setDeletModalOpen(true), setProductId(item._id);
+                          }}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          <RiDeleteBin5Fill className=" cursor-pointer " />
                         </a>
                       </td>
                     </tr>
@@ -97,7 +139,12 @@ const Products = () => {
           </div>
         </div>
       </div>
-      <AddProductSidebar open={open} setOpen={setOpen} />
+      <AddProductSidebar
+        productDetails={productDetails}
+        open={open}
+        setOpen={setOpen}
+        setProductAdd={setProductAdd}
+      />
     </div>
   );
 };

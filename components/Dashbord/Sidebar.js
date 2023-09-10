@@ -22,7 +22,7 @@ const Sidebar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   //   console.log("ss");
   const [tabIndex, setTabIndex] = useState(0);
-  console.log("tabIndex", tabIndex);
+  // console.log("tabIndex", tabIndex);
 
   return (
     // <Tabs selectedIndex={tabIndex}>
@@ -142,7 +142,7 @@ const Sidebar = () => {
                 <li>
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item, index) => (
-                      <TabList key={item.name}>
+                      <TabList className="cursor-pointer" key={item.name}>
                         <a
                           onClick={() => setTabIndex(index)}
                           // href={item.href}
