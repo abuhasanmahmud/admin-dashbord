@@ -34,7 +34,7 @@ const Products = () => {
     setOpen(true);
   };
 
-  // console.log("productDetails", productDetails);
+  console.log("productDetails", productDetails);
 
   return (
     <div>
