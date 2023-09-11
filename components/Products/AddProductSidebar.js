@@ -18,7 +18,7 @@ const AddProductSidebar = ({ open, setOpen, setProductAdd, productDetails }) => 
   } = useForm();
 
   const [submitting, setIsSubmitting] = useState(false);
-  // console.log("productDetails in add", productDetails);
+  console.log("productDetails in add", productDetails);
 
   const AddProductHandeler = async (data) => {
     setIsSubmitting(true);
